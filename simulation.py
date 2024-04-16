@@ -2,11 +2,12 @@ import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import animation
 from matplotlib.animation import FuncAnimation
+from drone import Drone
 
 plt.rcParams['animation.ffmpeg_path'] = r'C:\ffmpeg\bin\ffmpeg.exe'
 
 ARENA_SIDE_LENGTH = 10
-NUMBER_OF_ROBOTS  = 50
+NUMBER_OF_ROBOTS  = 1
 STEPS             = 1000
 MAX_SPEED         = 0.1
 
@@ -24,6 +25,8 @@ ax = plt.axes(xlim=(0, ARENA_SIDE_LENGTH), ylim=(0, ARENA_SIDE_LENGTH))
 points, = ax.plot([], [], 'bo', lw=0, )
 
 
+drones = [Drone((x[i], y[i])) for i in range(NUMBER_OF_ROBOTS)]
+
 # Make the environment toroidal 
 def wrap(z):    
     return z % ARENA_SIDE_LENGTH
@@ -32,14 +35,17 @@ def init():
     points.set_data([], [])
     return points,
 
-def animate(i):
-    global x, y, vx, vy
-    x = np.array(list(map(wrap, x + vx)))
-    y = np.array(list(map(wrap, y + vy)))
+def animate(i):    
+    for drone in drones:
+        drone.move()
     
-    points.set_data(x, y)
+    positions_x = [drones[i].pos[0] for i in range(NUMBER_OF_ROBOTS)]
+    positions_y = [drones[i].pos[1] for i in range(NUMBER_OF_ROBOTS)]
+    
+    points.set_data(positions_x, positions_y)
+
     print('Step ', i + 1, '/', STEPS, end='\r')
-    
+
     return points,
 
 anim = FuncAnimation(fig, animate, init_func=init,
