@@ -14,14 +14,27 @@ class World:
         self.sheep = []
         self.drones = []
 
-    def get_cell(self, x:int, y:int):
-        return x // self.cell_size, y // self.cell_size
+    def get_cell(self, x, y):
+        return int(x // self.cell_size), int(y // self.cell_size)
 
-    def add_sheep(self, sheep:Sheep, x:int, y:int):
+    def add_sheep(self, sheep, x, y):
         cell_x, cell_y = self.get_cell(x, y)
-        
+        cell_x = cell_x % self.cell_number
+        cell_y = cell_y % self.cell_number
         self.grid[cell_x][cell_y].append(sheep)
         self.sheep.append(sheep)
+
+    def remove_sheep(self, x, y):
+        cell_x, cell_y = self.get_cell(x, y)
+        cell_x = cell_x % self.cell_number
+        cell_y = cell_y % self.cell_number
+        cell_content = self.grid[cell_x][cell_y]
+        for sheep in cell_content:
+            if sheep.x == x and sheep.y == y:
+                cell_content.remove(sheep)
+                self.sheep.remove(sheep)
+                break
+
 
     def get_sheep_in_cell(self, cell_x, cell_y):
         return self.grid[cell_x][cell_y]

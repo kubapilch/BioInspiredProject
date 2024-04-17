@@ -16,7 +16,7 @@ STEPS = 500
 # Create the world object
 world = World(CELL_SIZE, CELL_NUMBER)
 
-# world.initialize_herd(NUMBER_OF_SHEEP)
+world.initialize_herd(NUMBER_OF_SHEEP)
 world.initialize_drones(NUMBER_OF_ROBOTS)
 
 # Set up the output (1024 x 768):
@@ -102,6 +102,6 @@ def animate(i):
 
 anim = FuncAnimation(fig, animate, init_func=init, frames=STEPS, interval=1, blit=True)
 
-
+plt.show()
 videowriter = animation.FFMpegWriter(fps=10)
 anim.save("output.mp4", writer=videowriter)

@@ -46,7 +46,7 @@ class Sheep:
                 + ((self.y - neighbor.y) % self.world.size) ** 2
             )
             if distance < sheep_radius and distance != 0:
-                # Calculate unit vector pointing away from neighbor (replace with your logic)
+                # Calculate unit vector pointing away from neighbor
                 repulsion_direction = (self.x - neighbor.x, self.y - neighbor.y)
                 repulsive_force += (
                     repulsion_direction[0] / distance,
@@ -77,12 +77,7 @@ class Sheep:
         inv_repulsive_dir = repulsive_dir + math.pi
 
         if self.state == "walking":
-            total_influence = (
-                fence_repulsion * fence_r_factor
-                + 1
-                - fence_r_factor
-                * ((inv_repulsive_dir * 0.9 + average_orienation * 0.1) / 2)
-            ) / 2 + rand_angle
+            total_influence = (fence_repulsion * fence_r_factor+ 1- fence_r_factor* ((inv_repulsive_dir * 0.9 + average_orienation * 0.1) / 2)) / 2 + rand_angle
         else:
             _, c = self.get_herd_hull_area()
             total_influence = math.atan2(abs(self.y - c[1]), abs(self.x - c[0]))
@@ -179,11 +174,11 @@ class Sheep:
 
         # Move sheep based on state
         if self.state != "idle":
+            self.world.remove_sheep(self.x,self.y)
             new_x, new_y = self.move()
             self.x = new_x
             self.y = new_y
-        # prev_running_neighbors=running_neighbors
-        # self.world.add_sheep(self, self.x, self.y)
+            self.world.add_sheep(self,self.x,self.y)
 
     def move(self):
 
