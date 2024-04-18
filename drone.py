@@ -1,5 +1,9 @@
 import random
-from math import pi
+import math
+import cmath
+import numpy as np
+
+REPULSION_CONSTANT = 10000
 
 class Message:
     def __init__(
@@ -43,6 +47,17 @@ class Drone:
 
         self.taking_picture = False
 
+        # momentum vector
+        self.momentum = [0, 0]
+        self.repulsion = [0, 0]
+        # attraction vector
+        self.attraction = [0, 0]
+
+        self.ATTRACTION_SPREAD = 32
+
+    def investigate_cell(self):
+        self.number_of_sheeps_visible = len(self.world.get_sheep_in_cell(*self.cell_pos))
+
     def move(self):
         """
         Move the drone in the direction of the target cell
@@ -54,10 +69,12 @@ class Drone:
         # If target reached, clear target and return
         if self.cell_pos == self.target_cell and self.taking_picture:
             self.target_cell = None
+            self.taking_picture = False
 
             return
         elif self.cell_pos == self.target_cell:
             self.taking_picture = True
+            self.investigate_cell()
 
             return
 
@@ -81,13 +98,6 @@ class Drone:
         """
         Find the target cell for the drone to move to
         """
-        # momentum vector
-        m = (0, 0)
-        # repulsion vector
-        r = (0, 0)
-        # attraction vector
-        a = (0, 0)
-
         possible_cells = []
 
         # Make the set of valid cells, based on the direction of the resulting vector and the distance to the cell from the current position
@@ -179,4 +189,38 @@ class Drone:
 
     @staticmethod
     def cauchy(theta, p):
-        return 1/(2*pi)
+        return 1/(2*math.pi)
+
+    @staticmethod
+    def gaussian_vector(v:list, spread:float):
+        v = np.array(v)
+        length = np.linalg.norm(v)
+        v_angle = math.atan2(v[1], v[0])
+        a = cmath.exp(1j * v_angle)
+        b = cmath.exp(-length/(2*spread**2))
+        return 2*a*b
+
+    @staticmethod
+    def electric_repulsion(r, sigma:float):
+        force = np.zeros(2)
+        
+        r = np.array(r)
+        force = REPULSION_CONSTANT*r/np.linalg.norm(r)**3
+
+        return force
+
+    def calculate_repulsion_forces(self):
+        # Calculate repulsion vector
+
+        sum = [0, 0]
+        for drone in self.world.drones:
+            if drone.id == self.id:
+                continue
+
+            distance = [self.absolute_pos[0] - drone.absolute_pos[0], self.absolute_pos[1] - drone.absolute_pos[1]]
+
+            res = self.electric_repulsion(distance, 1)
+            sum[0] += res[0]
+            sum[1] += res[1]
+            
+        self.repulsion = sum

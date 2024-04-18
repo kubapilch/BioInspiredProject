@@ -54,6 +54,9 @@ class World:
 
             drone.move()
 
+        for drone in self.drones:
+            drone.calculate_repulsion_forces()
+
     def initialize_herd(self, num_sheep):
         # Calculate initial spawn area radius
         radius = math.sqrt(num_sheep)
