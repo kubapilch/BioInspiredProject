@@ -75,12 +75,12 @@ class Sheep:
         repulsive_dir = self.get_separation_force(neighbors, 1)
         fence_repulsion, fence_r_factor = self.get_fence_repulsion(1)  # 0.1
         inv_repulsive_dir = repulsive_dir + math.pi
-
+        
         if self.state == "walking":
             total_influence = (fence_repulsion * fence_r_factor+ 1- fence_r_factor* ((inv_repulsive_dir * 0.9 + average_orienation * 0.1) / 2)) / 2 + rand_angle
         else:
             _, c = self.get_herd_hull_area()
-            total_influence = math.atan2(abs(self.y - c[1]), abs(self.x - c[0]))
+            total_influence = math.atan2(abs(self.y - c[1]), abs(self.x - c[0]))+(fence_repulsion * fence_r_factor+ 1- fence_r_factor* ((inv_repulsive_dir * 0.9 + average_orienation * 0.1) / 2))
         return total_influence
 
     def get_herd_hull_area(self):
@@ -100,7 +100,7 @@ class Sheep:
 
         # Calculate convex hull area (if needed)
         if len(sheep_positions) < 3:
-            return 0, [0, 0]
+            return 0, [(self.world.cell_size*self.world.cell_number)//2, (self.world.cell_size*self.world.cell_number)//2]
 
         hull = ConvexHull(sheep_positions)
         c = []

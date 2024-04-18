@@ -9,9 +9,9 @@ plt.rcParams["animation.ffmpeg_path"] = r"C:\ffmpeg\bin\ffmpeg.exe"
 ARENA_SIDE_LENGTH = 100
 CELL_SIZE = 10
 CELL_NUMBER = ARENA_SIDE_LENGTH // CELL_SIZE
-NUMBER_OF_ROBOTS = 10
+NUMBER_OF_ROBOTS = 2
 NUMBER_OF_SHEEP = 50
-STEPS = 500
+STEPS = 1000
 
 # Create the world object
 world = World(CELL_SIZE, CELL_NUMBER)
