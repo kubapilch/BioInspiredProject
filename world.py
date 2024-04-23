@@ -48,14 +48,23 @@ class World:
             sheep.update()
     
     def updata_drones(self):
+        known_targets = []
         for drone in self.drones:
-            if drone.target_cell is None:
-                drone.find_target()
+            while(True):
+                if drone.target_cell is None:
+                    drone.find_target()
+                    
+                    if drone.target_cell not in known_targets:
+                        known_targets.append(drone.target_cell)
+
+                        break
+                else:
+                    break
 
             drone.move()
 
         for drone in self.drones:
-            drone.calculate_repulsion_forces()
+            drone.calculate_total_force()
 
     def initialize_herd(self, num_sheep):
         # Calculate initial spawn area radius
