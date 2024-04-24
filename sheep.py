@@ -99,14 +99,14 @@ class Sheep:
             sheep_positions.append((world_x, world_y))
 
         # Calculate convex hull area (if needed)
-        if len(sheep_positions) < 3:
+        if len(sheep_positions) < 2:
             return 0, [0, 0]
-
+        
         hull = ConvexHull(sheep_positions)
         c = []
         for i in range(hull.points.shape[1]):
             c.append(np.mean(hull.points[hull.vertices, i]))
-        return hull.volume, c
+        return hull.area, c
 
     def update(self):
         # Update state based on neighbors and environment
@@ -132,6 +132,7 @@ class Sheep:
             if rand > switch_p:
                 self.state = "walking"
             # idle to running
+
             p = math.exp((hull_area - running_threshold)) * (
                 1 + running_mimicking_factor * (running_neighbors)
             )
@@ -141,7 +142,7 @@ class Sheep:
                 self.state = "running"
 
         elif self.state == "walking":
-            self.desired_speed = 0.15
+            self.desired_speed = 1
             self.desired_orientation = self.update_orienation()
             # walking to idle
             p = (1 + mimicking_factor * idle_neighbors) / walk_to_idle_coef
@@ -157,7 +158,7 @@ class Sheep:
                 self.state = "running"
 
         elif self.state == "running":
-            self.desired_speed = 1.5
+            self.desired_speed = 10
             self.desired_orientation = self.update_orienation()
             d = math.sqrt(
                 ((self.x - hull_center[0]) % self.world.size) ** 2
@@ -182,8 +183,8 @@ class Sheep:
 
     def move(self):
 
-        max_speed_change = 0.1
-        max_dir_change = 0.2
+        max_speed_change = 0.2
+        max_dir_change = 0.5
         deltaT = 1
         world_size = self.world.size
         speed_ex = min(

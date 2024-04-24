@@ -9,9 +9,9 @@ plt.rcParams["animation.ffmpeg_path"] = r"C:\ffmpeg\bin\ffmpeg.exe"
 ARENA_SIDE_LENGTH = 100
 CELL_SIZE = 10
 CELL_NUMBER = ARENA_SIDE_LENGTH // CELL_SIZE
-NUMBER_OF_ROBOTS = 5
-NUMBER_OF_SHEEP = 50
-STEPS = 1500
+NUMBER_OF_ROBOTS = 10
+NUMBER_OF_SHEEP = 500
+STEPS = 1000
 
 # Create the world object
 world = World(CELL_SIZE, CELL_NUMBER)
@@ -181,6 +181,6 @@ def animate(i):
 
 anim = FuncAnimation(fig, animate, init_func=init, frames=STEPS, interval=1, blit=True)
 
-# plt.show()
+#plt.show()
 videowriter = animation.FFMpegWriter(fps=10)
 anim.save("output.mp4", writer=videowriter)
