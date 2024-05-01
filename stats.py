@@ -1,5 +1,6 @@
 import argparse
 import csv
+import os
 
 from world import World
 
@@ -34,23 +35,22 @@ def get_arguments():
     return parser.parse_args()
 
 
-if __name__ == "__main__":
-
+def do_test(num_robots, num_sheep, steps, repulsion, attraction, herds_number):
     args = get_arguments()
     ARENA_SIDE_LENGTH = 200
     CELL_SIZE = 10
-    NUMBER_OF_ROBOTS = args.number_of_robots
-    NUMBER_OF_SHEEP = args.number_of_sheep
-    STEPS = args.steps
-    ATTRACTION_STRENGTH = - args.attraction
-    REPULSION_STRENGTH = args.repulsion
+    NUMBER_OF_ROBOTS = num_robots
+    NUMBER_OF_SHEEP = num_sheep
+    STEPS = steps
+    ATTRACTION_STRENGTH = - attraction
+    REPULSION_STRENGTH = repulsion
 
     CELL_NUMBER = ARENA_SIDE_LENGTH // CELL_SIZE
 
     # Create the world object
     world = World(CELL_SIZE, CELL_NUMBER)
 
-    world.initialize_herds(NUMBER_OF_SHEEP, args.herds_number)
+    world.initialize_herds(NUMBER_OF_SHEEP, herds_number)
     world.initialize_drones(NUMBER_OF_ROBOTS, ATTRACTION_STRENGTH, REPULSION_STRENGTH)
 
     monitored_animals = []
@@ -59,19 +59,36 @@ if __name__ == "__main__":
         # Update the world
         world.update()
 
+        # If the monitored sheep and the percentage of sheep is the same for 50 steps, and the world has been explored stop the simulation
+        limit = 50 
+        if i > limit and (len(set(monitored_animals[-limit:])) == 1) and world.world_explored:
+            break 
+
         monitored_animals.append(
-            [
+            (
                 world.number_monitored_sheep,
                 world.number_monitored_sheep / NUMBER_OF_SHEEP,
                 world.world_explored,
-            ]
+            )
         )
 
-        print(f"{i}/{STEPS}")
+        # print(f"{i}/{STEPS}")
 
+    # Specify directory path
+    directory = "./csv_results/"
+
+    # Create directory if it doesn't exist
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+        
     with open(
-        f"monitored_animals-{NUMBER_OF_ROBOTS}-{ATTRACTION_STRENGTH}-{REPULSION_STRENGTH}-{args.herds_number}.csv",
+        f"{directory}monitored_animals-{NUMBER_OF_ROBOTS}-{ATTRACTION_STRENGTH}-{REPULSION_STRENGTH}-{herds_number}.csv",
         "w",
     ) as f:
         writer = csv.writer(f)
         writer.writerows(monitored_animals)
+
+if __name__ == "__main__":
+    args = get_arguments()
+
+    do_test(args.number_of_robots, args.number_of_sheep, args.steps, args.repulsion, args.attraction, args.herds_number)
