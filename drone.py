@@ -57,7 +57,6 @@ class Drone:
 
         self.number_of_sheeps_visible = 0
 
-        self.received_messages = []
         self.message_count = 0
 
         self.world = world
@@ -86,6 +85,8 @@ class Drone:
         self.attraction_constant = attraction_constant
         self.repulsion_constant = repulsion_constant
 
+        self.message_archiove = []
+
     def investigate_cell(self):
         self.number_of_sheeps_visible = len(
             self.world.get_sheep_in_cell(*self.cell_pos)
@@ -111,11 +112,12 @@ class Drone:
             return
 
         # Makre sure that another drone is not occupying the target cell
-        for drone in self.world.drones:
+        for drone_message in self.message_archiove:
             if (
-                drone.target_cell == self.target_cell
-                and drone.id != self.id
-                and drone.target_cell == drone.cell_pos
+                drone_message is not None
+                and drone_message.sender_id != self.id
+                and drone_message.target_cell == self.target_cell
+                and drone_message.target_cell == drone_message.current_cell
             ):
                 self.target_cell = None
                 return
@@ -272,8 +274,18 @@ class Drone:
         ) ** 0.5
 
     def receive_message(self, message: Message):
-        if f"{message.sender_id}-{message.message_id}" not in self.received_messages:
-            self.received_messages.append(f"{message.sender_id}-{message.message_id}")
+        # Make sure that the message space for this sender ID exists in the message archive
+        if message.sender_id > len(self.message_archiove) - 1:
+            self.message_archiove.extend(
+                [None] * (message.sender_id - len(self.message_archiove) + 1)
+            )
+        
+        # If the message is newer than the one in the archive, update the archive
+        if (
+            self.message_archiove[message.sender_id] is None
+            or self.message_archiove[message.sender_id].message_id < message.message_id
+        ):
+            self.message_archiove[message.sender_id] = message
 
             self.visited_cells[message.target_cell[0]][message.target_cell[1]] = True
 
@@ -320,13 +332,13 @@ class Drone:
         # Calculate repulsion vector
 
         sum = [0, 0]
-        for drone in self.world.drones:
-            if drone.id == self.id:
+        for message in self.message_archiove:
+            if message.sender_id == self.id or message is None:
                 continue
 
             distance = [
-                self.absolute_pos[0] - drone.absolute_pos[0],
-                self.absolute_pos[1] - drone.absolute_pos[1],
+                self.absolute_pos[0] - message.current_cell[0] * self.cell_size + self.cell_size / 2,
+                self.absolute_pos[1] - message.current_cell[1] * self.cell_size + self.cell_size / 2,
             ]
 
             res = self.electric_repulsion(distance, self.repulsion_constant)
