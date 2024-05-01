@@ -8,12 +8,14 @@ def run_test(params):
 
 if __name__ == "__main__":
     # Define the parameter ranges
-    # n_drones_range = range(5, 51, 5)
-    # attr_range = range(10, 501, 10)
-    # rep_range = range(10, 501, 10)
-    n_drones_range = range(5, 11, 5)
-    attr_range = range(10, 21, 10)
-    rep_range = range(10, 21, 10)
+    n_drones_range = range(5, 51, 5)
+    attr_range = range(10, 501, 10)
+    rep_range = range(10, 501, 10)
+    
+    # Testing parameters
+    # n_drones_range = range(5, 11, 5)
+    # attr_range = range(10, 21, 10)
+    # rep_range = range(10, 21, 10)
     
     # Generate parameter combinations
     params_list = [(n, a, r, 3) for n in n_drones_range for a in attr_range for r in rep_range]
