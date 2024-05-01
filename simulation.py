@@ -11,13 +11,15 @@ CELL_SIZE = 10
 CELL_NUMBER = ARENA_SIDE_LENGTH // CELL_SIZE
 NUMBER_OF_ROBOTS = 15
 NUMBER_OF_SHEEP = 200
-STEPS = 1500
+STEPS = 3000
+REPULSION_CONSTANT = 125
+ATTRACTION_CONSTANT = -200
 
 # Create the world object
 world = World(CELL_SIZE, CELL_NUMBER)
 
 world.initialize_herd(NUMBER_OF_SHEEP)
-world.initialize_drones(NUMBER_OF_ROBOTS)
+world.initialize_drones(NUMBER_OF_ROBOTS, ATTRACTION_CONSTANT, REPULSION_CONSTANT)
 
 # Set up the output (1024 x 768):
 fig = plt.figure(figsize=(10.24, 7.68), dpi=100)
