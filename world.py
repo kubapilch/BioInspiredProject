@@ -4,13 +4,14 @@ import random
 from sheep import Sheep
 from drone import Drone
 
+
 class World:
-    def __init__(self, cell_size:int, cell_number:int):
+    def __init__(self, cell_size: int, cell_number: int):
         self.cell_size = cell_size
         self.cell_number = cell_number
         # First index is x, second is y (grid[x][y])
         self.grid = [[[] for _ in range(cell_number)] for _ in range(cell_number)]
-        
+
         self.sheep = []
         self.drones = []
 
@@ -35,25 +36,24 @@ class World:
                 self.sheep.remove(sheep)
                 break
 
-
     def get_sheep_in_cell(self, cell_x, cell_y):
         return self.grid[cell_x][cell_y]
 
     def update(self):
-        self.update_sheeps()
+        # self.update_sheeps()
         self.updata_drones()
 
     def update_sheeps(self):
         for sheep in self.sheep:
             sheep.update()
-    
+
     def updata_drones(self):
         known_targets = []
         for drone in self.drones:
-            while(True):
+            while True:
                 if drone.target_cell is None:
                     drone.find_target()
-                    
+
                     if drone.target_cell not in known_targets:
                         known_targets.append(drone.target_cell)
 
@@ -86,14 +86,29 @@ class World:
             # Add sheep to the world
             self.add_sheep(Sheep(self, x, y), x, y)
 
-    def initialize_drones(self, num_drones):
+    def initialize_drones(
+        self, num_drones: int, attraction_constant: int, repulsion_constant: int
+    ):
         for i in range(num_drones):
             x_cell = random.randint(0, self.cell_number - 1)
             y_cell = random.randint(0, self.cell_number - 1)
-            
-            self.drones.append(Drone(self, (x_cell, y_cell), i, self.cell_size, self.cell_number))
+
+            self.drones.append(
+                Drone(
+                    self,
+                    (x_cell, y_cell),
+                    i,
+                    self.cell_size,
+                    self.cell_number,
+                    attraction_constant,
+                    repulsion_constant,
+                )
+            )
 
     @property
     def size(self):
         return self.cell_size * self.cell_number
-    
+
+    @property
+    def number_monitored_sheep(self):
+        return sum(drone.number_of_sheeps_visible for drone in self.drones)

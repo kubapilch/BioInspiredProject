@@ -3,10 +3,6 @@ import math
 import cmath
 import numpy as np
 
-REPULSION_CONSTANT = 125
-ATTRACTION_CONSTANT = -200
-
-
 class Message:
     def __init__(
         self,
@@ -43,7 +39,14 @@ class Beacon:
 class Drone:
 
     def __init__(
-        self, world, cell_pos: tuple, id: int, cell_size: int, cell_number: int
+        self,
+        world,
+        cell_pos: tuple,
+        id: int,
+        cell_size: int,
+        cell_number: int,
+        attraction_constant: int,
+        repulsion_constant: int
     ):
         self.cell_pos = cell_pos
         self.cell_size = cell_size
@@ -78,6 +81,9 @@ class Drone:
 
         self.ATTRACTION_SPREAD = 32
         self.REPULSION_SPREAD = 64
+
+        self.attraction_constant = attraction_constant
+        self.repulsion_constant = repulsion_constant
 
     def investigate_cell(self):
         self.number_of_sheeps_visible = len(
@@ -170,7 +176,7 @@ class Drone:
             self.send_message()
 
             return
-        
+
         # Make the set of valid cells, based on the direction of the resulting vector and the distance to the cell from the current position
         # Loop through cells which are 1 coordinate away from the current cell
         for i in range(0, self.cell_number):
@@ -198,7 +204,9 @@ class Drone:
                 ):
                     continue
 
-                possible_cells.append((starting_cell[0] + cell[0], starting_cell[1] + cell[1]))
+                possible_cells.append(
+                    (starting_cell[0] + cell[0], starting_cell[1] + cell[1])
+                )
 
             # If there are possible cells to move to, break the loop
             if len(possible_cells) != 0:
@@ -310,7 +318,7 @@ class Drone:
                 self.absolute_pos[1] - drone.absolute_pos[1],
             ]
 
-            res = self.electric_repulsion(distance, REPULSION_CONSTANT)
+            res = self.electric_repulsion(distance, self.repulsion_constant)
 
             np.add(np.random.normal(0, self.REPULSION_SPREAD, size=2), res)
 
@@ -327,7 +335,7 @@ class Drone:
                 self.absolute_pos[1] - beacon.absolute_pos[1],
             ]
 
-            res = self.electric_repulsion(distance, ATTRACTION_CONSTANT)
+            res = self.electric_repulsion(distance, self.attraction_constant)
 
             # increase the attraction force by the beacon strength
             # res[0] *= (res[0] * beacon.strength * 0.1)

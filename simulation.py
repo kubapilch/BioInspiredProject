@@ -6,12 +6,12 @@ from world import World
 
 plt.rcParams["animation.ffmpeg_path"] = r"C:\ffmpeg\bin\ffmpeg.exe"
 
-ARENA_SIDE_LENGTH = 100
+ARENA_SIDE_LENGTH = 500
 CELL_SIZE = 10
 CELL_NUMBER = ARENA_SIDE_LENGTH // CELL_SIZE
-NUMBER_OF_ROBOTS = 10
-NUMBER_OF_SHEEP = 500
-STEPS = 1000
+NUMBER_OF_ROBOTS = 15
+NUMBER_OF_SHEEP = 200
+STEPS = 1500
 
 # Create the world object
 world = World(CELL_SIZE, CELL_NUMBER)
@@ -160,14 +160,14 @@ def animate(i):
     for overlay in ax.patches:
         overlay.remove()
 
-    plot_visibility_squares()
+    # plot_visibility_squares()
     plot_visited_cells()
-    plot_direction_lines()
-    plot_drone_labels()
-    plot_repulsion_vectors()
-    plot_attraction_vectors()
-    plot_result_vectors()
-    plot_beacon_rectangles()
+    # plot_direction_lines()
+    # plot_drone_labels()
+    # plot_repulsion_vectors()
+    # plot_attraction_vectors()
+    # plot_result_vectors()
+    # plot_beacon_rectangles()
 
     # Update sheep positions on the plot
     sheep_positions_x = [sheep.x for sheep in world.sheep]
