@@ -3,6 +3,7 @@ import math
 import cmath
 import numpy as np
 
+
 class Message:
     def __init__(
         self,
@@ -46,7 +47,7 @@ class Drone:
         cell_size: int,
         cell_number: int,
         attraction_constant: int,
-        repulsion_constant: int
+        repulsion_constant: int,
     ):
         self.cell_pos = cell_pos
         self.cell_size = cell_size
@@ -108,6 +109,16 @@ class Drone:
         # If no target cell do not move
         if self.target_cell is None:
             return
+
+        # Makre sure that another drone is not occupying the target cell
+        for drone in self.world.drones:
+            if (
+                drone.target_cell == self.target_cell
+                and drone.id != self.id
+                and drone.target_cell == drone.cell_pos
+            ):
+                self.target_cell = None
+                return
 
         # If target reached, clear target and return
         if self.cell_pos == self.target_cell and self.taking_picture:

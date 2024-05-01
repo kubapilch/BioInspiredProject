@@ -6,27 +6,27 @@ from world import World
 
 plt.rcParams["animation.ffmpeg_path"] = r"C:\ffmpeg\bin\ffmpeg.exe"
 
-ARENA_SIDE_LENGTH = 500
+ARENA_SIDE_LENGTH = 100
 CELL_SIZE = 10
 CELL_NUMBER = ARENA_SIDE_LENGTH // CELL_SIZE
 NUMBER_OF_ROBOTS = 15
-NUMBER_OF_SHEEP = 200
-STEPS = 3000
+NUMBER_OF_SHEEP = 40
+STEPS = 2000
 REPULSION_CONSTANT = 125
 ATTRACTION_CONSTANT = -200
 
 # Create the world object
 world = World(CELL_SIZE, CELL_NUMBER)
 
-world.initialize_herd(NUMBER_OF_SHEEP)
+world.initialize_herds(NUMBER_OF_SHEEP, 1)
 world.initialize_drones(NUMBER_OF_ROBOTS, ATTRACTION_CONSTANT, REPULSION_CONSTANT)
 
 # Set up the output (1024 x 768):
 fig = plt.figure(figsize=(10.24, 7.68), dpi=100)
 ax = plt.axes(xlim=(0, ARENA_SIDE_LENGTH), ylim=(0, ARENA_SIDE_LENGTH))
 
-(drone_points,) = ax.plot([], [], "bo", lw=0, label="Drone")
 (sheep_points,) = ax.plot([], [], "ro", lw=0, label="Sheep")
+(drone_points,) = ax.plot([], [], "bo", lw=0, label="Drone")
 direction_lines = [
     ax.plot([], [], "k-", lw=1)[0] for _ in range(NUMBER_OF_ROBOTS)
 ]  # Lines indicating direction
@@ -162,14 +162,14 @@ def animate(i):
     for overlay in ax.patches:
         overlay.remove()
 
-    # plot_visibility_squares()
+    plot_visibility_squares()
     plot_visited_cells()
-    # plot_direction_lines()
-    # plot_drone_labels()
-    # plot_repulsion_vectors()
-    # plot_attraction_vectors()
-    # plot_result_vectors()
-    # plot_beacon_rectangles()
+    plot_direction_lines()
+    plot_drone_labels()
+    plot_repulsion_vectors()
+    plot_attraction_vectors()
+    plot_result_vectors()
+    plot_beacon_rectangles()
 
     # Update sheep positions on the plot
     sheep_positions_x = [sheep.x for sheep in world.sheep]

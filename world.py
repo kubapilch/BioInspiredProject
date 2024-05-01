@@ -66,11 +66,15 @@ class World:
         for drone in self.drones:
             drone.calculate_total_force()
 
-    def initialize_herd(self, num_sheep):
+    def initialize_herds(self, num_sheep_in_herd, num_herds):
+        for i in range(num_herds):
+            x=random.randint(self.cell_size,self.size-self.cell_size)
+            y=random.randint(self.cell_size,self.size-self.cell_size)
+            self.initialize_herd(num_sheep_in_herd,x,y)
+
+    def initialize_herd(self, num_sheep,center_x,center_y):
         # Calculate initial spawn area radius
         radius = math.sqrt(num_sheep)
-        center_x = self.size // 2
-        center_y = self.size // 2
 
         for _ in range(num_sheep):
             # Generate random positions within the circle
@@ -112,3 +116,7 @@ class World:
     @property
     def number_monitored_sheep(self):
         return sum(drone.number_of_sheeps_visible for drone in self.drones)
+    
+    @property
+    def world_explored(self):
+        return all(drone.fully_explored for drone in self.drones)
