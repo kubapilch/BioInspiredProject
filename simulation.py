@@ -3,22 +3,24 @@ from matplotlib import pyplot as plt
 from matplotlib import animation
 from matplotlib.animation import FuncAnimation
 from world import World
+import csv
 
 plt.rcParams["animation.ffmpeg_path"] = r"C:\ffmpeg\bin\ffmpeg.exe"
 
-ARENA_SIDE_LENGTH = 100
+ARENA_SIDE_LENGTH = 200
 CELL_SIZE = 10
 CELL_NUMBER = ARENA_SIDE_LENGTH // CELL_SIZE
-NUMBER_OF_ROBOTS = 15
-NUMBER_OF_SHEEP = 40
+NUMBER_OF_ROBOTS = 50
+NUMBER_OF_SHEEP = 100
 STEPS = 2000
 REPULSION_CONSTANT = 125
 ATTRACTION_CONSTANT = -200
+NUMBER__OF_HEARDS = 2
 
 # Create the world object
 world = World(CELL_SIZE, CELL_NUMBER)
 
-world.initialize_herds(NUMBER_OF_SHEEP, 1)
+world.initialize_herds(NUMBER_OF_SHEEP, NUMBER__OF_HEARDS)
 world.initialize_drones(NUMBER_OF_ROBOTS, ATTRACTION_CONSTANT, REPULSION_CONSTANT)
 
 # Set up the output (1024 x 768):
@@ -46,6 +48,7 @@ result_vectors = [
 
 ax.legend()
 
+monitored_animals = []
 
 def init():
     drone_points.set_data([], [])
@@ -102,7 +105,7 @@ def plot_direction_lines():
 def plot_drone_labels():
     for i, drone in enumerate(world.drones):
         # Update drone label
-        drone_labels[i].set_text(f"Sheep: {drone.number_of_sheeps_visible}")
+        drone_labels[i].set_text(f"{drone.number_of_sheeps_visible}")
         drone_labels[i].set_position(
             (drone.absolute_pos[0], drone.absolute_pos[1] + CELL_SIZE)
         )
@@ -163,13 +166,13 @@ def animate(i):
         overlay.remove()
 
     plot_visibility_squares()
-    plot_visited_cells()
-    plot_direction_lines()
+    # plot_visited_cells()
+    # plot_direction_lines()
     plot_drone_labels()
-    plot_repulsion_vectors()
-    plot_attraction_vectors()
-    plot_result_vectors()
-    plot_beacon_rectangles()
+    # plot_repulsion_vectors()
+    # plot_attraction_vectors()
+    # plot_result_vectors()
+    # plot_beacon_rectangles()
 
     # Update sheep positions on the plot
     sheep_positions_x = [sheep.x for sheep in world.sheep]
@@ -177,6 +180,14 @@ def animate(i):
     sheep_points.set_data(sheep_positions_x, sheep_positions_y)
 
     print("Step ", i + 1, "/", STEPS, end="\r")
+
+    monitored_animals.append(
+        (
+            world.number_monitored_sheep,
+            world.number_monitored_sheep / (NUMBER_OF_SHEEP*NUMBER__OF_HEARDS),
+            world.world_explored,
+        )
+    )
 
     return drone_points, sheep_points
 
@@ -186,3 +197,10 @@ anim = FuncAnimation(fig, animate, init_func=init, frames=STEPS, interval=1, bli
 #plt.show()
 videowriter = animation.FFMpegWriter(fps=10)
 anim.save("output.mp4", writer=videowriter)
+
+with open(
+        f"output.csv",
+        "w",
+    ) as f:
+        writer = csv.writer(f)
+        writer.writerows(monitored_animals)

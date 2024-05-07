@@ -162,3 +162,4 @@ cython_debug/
 # Simulation
 simulation_outputs/
 *.mp4
+/csv_results/*

@@ -60,17 +60,18 @@ def do_test(num_robots, num_sheep, steps, repulsion, attraction, herds_number):
         world.update()
 
         # If the monitored sheep and the percentage of sheep is the same for 50 steps, and the world has been explored stop the simulation
-        limit = 50 
-        if i > limit and (len(set(monitored_animals[-limit:])) == 1) and world.world_explored:
-            break 
-
+        limit = 200 
+         
         monitored_animals.append(
             (
                 world.number_monitored_sheep,
-                world.number_monitored_sheep / NUMBER_OF_SHEEP,
+                world.number_monitored_sheep / (NUMBER_OF_SHEEP*herds_number),
                 world.world_explored,
             )
         )
+
+        if i > limit and (len(set(monitored_animals[-limit:])) == 1) and world.world_explored:
+            break
 
         # print(f"{i}/{STEPS}")
 
