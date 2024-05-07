@@ -8,7 +8,7 @@ def run_test(params):
 
 if __name__ == "__main__":
     # Define the parameter ranges
-    n_drones_range = range(5, 6, 5)
+    n_drones_range = range(25, 26, 5)
     attr_range = range(0, 401, 20)
     rep_range = range(0, 401, 20)
     iterations = range(0, 15)
