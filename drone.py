@@ -333,7 +333,7 @@ class Drone:
 
         sum = [0, 0]
         for message in self.message_archiove:
-            if message.sender_id == self.id or message is None:
+            if message is None or message.sender_id == self.id:
                 continue
 
             distance = [
