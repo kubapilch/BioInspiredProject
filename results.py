@@ -3,14 +3,15 @@ from stats import do_test
 
 def run_test(params):
     print(f"Running: {params}")
-    n_drones, attr, rep, herds = params
-    return do_test(n_drones, 100, 2000, rep, attr, herds)
+    n_drones, attr, rep, herds, iteration = params
+    return do_test(n_drones, 100, 4000, rep, attr, herds, iteration)
 
 if __name__ == "__main__":
     # Define the parameter ranges
-    n_drones_range = range(5, 16, 5)
-    attr_range = range(10, 501, 10)
-    rep_range = range(10, 501, 10)
+    n_drones_range = range(5, 6, 5)
+    attr_range = range(0, 401, 20)
+    rep_range = range(0, 401, 20)
+    iterations = range(0, 15)
     
     # Testing parameters
     # n_drones_range = range(5, 11, 5)
@@ -18,10 +19,10 @@ if __name__ == "__main__":
     # rep_range = range(10, 21, 10)
     
     # Generate parameter combinations
-    params_list = [(n, a, r, 2) for n in n_drones_range for a in attr_range for r in rep_range]
+    params_list = [(n, a, r, 2, i) for i in iterations for n in n_drones_range for a in attr_range for r in rep_range]
     
     # Initialize a Pool of workers
-    with Pool(10) as pool:
+    with Pool() as pool:
         # Map the do_test function to each parameter combination in parallel
         results = pool.map(run_test, params_list)
 
