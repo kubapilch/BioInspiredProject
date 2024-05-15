@@ -7,14 +7,14 @@ import csv
 
 plt.rcParams["animation.ffmpeg_path"] = r"C:\ffmpeg\bin\ffmpeg.exe"
 
-ARENA_SIDE_LENGTH = 200
+ARENA_SIDE_LENGTH = 100
 CELL_SIZE = 10
 CELL_NUMBER = ARENA_SIDE_LENGTH // CELL_SIZE
-NUMBER_OF_ROBOTS = 50
-NUMBER_OF_SHEEP = 100
-STEPS = 2000
-REPULSION_CONSTANT = 125
-ATTRACTION_CONSTANT = -200
+NUMBER_OF_ROBOTS = 2
+NUMBER_OF_SHEEP = 40
+STEPS = 4000
+REPULSION_CONSTANT = 180
+ATTRACTION_CONSTANT = -360
 NUMBER__OF_HEARDS = 2
 
 # Create the world object
@@ -165,13 +165,13 @@ def animate(i):
     for overlay in ax.patches:
         overlay.remove()
 
-    plot_visibility_squares()
+    # plot_visibility_squares()
     # plot_visited_cells()
     # plot_direction_lines()
-    plot_drone_labels()
-    # plot_repulsion_vectors()
-    # plot_attraction_vectors()
-    # plot_result_vectors()
+    # plot_drone_labels()
+    plot_repulsion_vectors()
+    plot_attraction_vectors()
+    plot_result_vectors()
     # plot_beacon_rectangles()
 
     # Update sheep positions on the plot

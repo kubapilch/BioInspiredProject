@@ -163,3 +163,4 @@ cython_debug/
 simulation_outputs/
 *.mp4
 /csv_results/*
+/csv_results_validation/*

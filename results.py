@@ -8,9 +8,9 @@ def run_test(params):
 
 if __name__ == "__main__":
     # Define the parameter ranges
-    n_drones_range = range(25, 26, 5)
-    attr_range = range(0, 401, 20)
-    rep_range = range(0, 401, 20)
+    n_drones_range = range(40, 41, 5)
+    attr_range = range(340, 361, 20)
+    rep_range = range(100, 240, 20)
     iterations = range(0, 15)
     
     # Testing parameters
@@ -19,7 +19,7 @@ if __name__ == "__main__":
     # rep_range = range(10, 21, 10)
     
     # Generate parameter combinations
-    params_list = [(n, a, r, 2, i) for i in iterations for n in n_drones_range for a in attr_range for r in rep_range]
+    params_list = [(n, a, r, 4, i) for i in iterations for n in n_drones_range for a in attr_range for r in rep_range]
     
     # Initialize a Pool of workers
     with Pool() as pool:

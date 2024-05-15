@@ -39,7 +39,7 @@ def get_arguments():
 
 def do_test(num_robots, num_sheep, steps, repulsion, attraction, herds_number, iteration):
     args = get_arguments()
-    ARENA_SIDE_LENGTH = 200
+    ARENA_SIDE_LENGTH = 300
     CELL_SIZE = 10
     NUMBER_OF_ROBOTS = num_robots
     NUMBER_OF_SHEEP = num_sheep
@@ -78,7 +78,7 @@ def do_test(num_robots, num_sheep, steps, repulsion, attraction, herds_number, i
         # print(f"{i}/{STEPS}")
 
     # Specify directory path
-    directory = "./csv_results/"
+    directory = "./csv_results_validation/"
 
     # Create directory if it doesn't exist
     if not os.path.exists(directory):

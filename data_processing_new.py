@@ -24,7 +24,7 @@ def process_csv_file(file_path):
     return [number_of_drones, attraction_strength, repulsion_strength, final_percentage, data_length]
 
 # Path to the folder containing CSV files
-folder_path = "csv_results"
+folder_path = "csv_results_validation"
 
 # List to store processed data from each file
 data = []
@@ -53,4 +53,4 @@ result_df.columns = ["Number of Drones", "Attraction Constant", "Repulsion Const
                      "Mean Data Length", "Std Data Length"]
 
 # Writing the DataFrame to a CSV file
-result_df.to_csv("output.csv", index=False)
+result_df.to_csv("validation.csv", index=False)
